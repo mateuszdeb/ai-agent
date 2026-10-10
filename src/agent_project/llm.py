@@ -40,16 +40,36 @@ def is_broken_reply(text: str | None, tool_calls: list | None) -> bool:
 
 
 class OpenRouterClient:
-    def __init__(self, model: str | None = None, max_tokens: int = 1024) -> None:
+    def __init__(
+        self,
+        model: str | None = None,
+        base_url: str | None = None,
+        api_key: str | None = None,
+        max_tokens: int = 1024,
+    ) -> None:
         load_dotenv()
-        api_key = os.getenv("OPENROUTER_API_KEY")
         self.model = model or os.getenv("MODEL_NAME")
         self.max_tokens = max_tokens
-        if not api_key or not self.model:
-            raise ValueError("Set OPENROUTER_API_KEY and MODEL_NAME in .env")
+        resolved_base_url = (
+            base_url
+            or os.getenv("LLM_BASE_URL")
+            or os.getenv("OPENAI_BASE_URL")
+            or "https://openrouter.ai/api/v1"
+        )
+        is_local = "localhost" in resolved_base_url or "127.0.0.1" in resolved_base_url
+        resolved_api_key = (
+            api_key
+            or os.getenv("OPENROUTER_API_KEY")
+            or os.getenv("LLM_API_KEY")
+            or ("local" if is_local else None)
+        )
+        if not resolved_api_key or not self.model:
+            raise ValueError(
+                "Set OPENROUTER_API_KEY (or LLM_BASE_URL) and MODEL_NAME in .env"
+            )
         self.client = OpenAI(
-            api_key=api_key,
-            base_url="https://openrouter.ai/api/v1",
+            api_key=resolved_api_key,
+            base_url=resolved_base_url,
             timeout=60.0,
             max_retries=1,
         )
@@ -120,3 +140,7 @@ class MockClient:
         if not self.responses:
             raise RuntimeError("Mock response queue is empty")
         return self.responses.popleft()
+
+
+LocalClient = OpenRouterClient
+

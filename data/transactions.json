@@ -1,0 +1,85 @@
+[
+  {
+    "id": "tx_101",
+    "date": "2026-10-01",
+    "merchant": "Biedronka",
+    "amount": 142.50,
+    "currency": "PLN",
+    "description": "Zakupy spożywcze - Płatność kartą",
+    "status": "normal",
+    "suggested_category": "Groceries"
+  },
+  {
+    "id": "tx_102",
+    "date": "2026-10-02",
+    "merchant": "PGE Dystrybucja",
+    "amount": 284.10,
+    "currency": "PLN",
+    "description": "Faktura za energię elektryczną 09/2026",
+    "status": "normal",
+    "suggested_category": "Utilities"
+  },
+  {
+    "id": "tx_103",
+    "date": "2026-10-02",
+    "merchant": "Spotify Polska",
+    "amount": 24.99,
+    "currency": "PLN",
+    "description": "Subskrypcja Spotify Premium",
+    "status": "normal",
+    "suggested_category": "Subscriptions"
+  },
+  {
+    "id": "tx_104",
+    "date": "2026-10-03",
+    "merchant": "Spotify Polska",
+    "amount": 24.99,
+    "currency": "PLN",
+    "description": "Subskrypcja Spotify Premium",
+    "status": "flagged_duplicate",
+    "notes": "Potencjalne podwójne obciążenie subskrypcji w ciągu 24h",
+    "suggested_category": "Subscriptions"
+  },
+  {
+    "id": "tx_105",
+    "date": "2026-10-04",
+    "merchant": "Carrefour Hipermarket",
+    "amount": 1850.00,
+    "currency": "PLN",
+    "description": "Płatność kartą terminal Carrefour",
+    "status": "flagged_high_amount",
+    "notes": "Nietypowo wysoka kwota w markecie - możliwy zakup sprzętu RTV/AGD lub wyposażenia domu",
+    "suggested_category": "Unknown - Needs Clarification"
+  },
+  {
+    "id": "tx_106",
+    "date": "2026-10-05",
+    "merchant": "PAYPAL *XYZ_CLOUD_SRV",
+    "amount": 349.00,
+    "currency": "PLN",
+    "description": "Płatność internetowa PayPal",
+    "status": "flagged_unrecognized",
+    "notes": "Nierozpoznany odbiorca i niejasny opis transakcji",
+    "suggested_category": "Unknown - Needs Clarification"
+  },
+  {
+    "id": "tx_107",
+    "date": "2026-10-06",
+    "merchant": "Apteka DOZ",
+    "amount": 68.40,
+    "currency": "PLN",
+    "description": "Zakup leków bez recepty",
+    "status": "normal",
+    "suggested_category": "Healthcare"
+  },
+  {
+    "id": "tx_108",
+    "date": "2026-10-07",
+    "merchant": "Orlen Stacja Paliw",
+    "amount": 215.00,
+    "currency": "PLN",
+    "description": "Tankowanie paliwa Pb95",
+    "status": "normal",
+    "suggested_category": "Transport"
+  }
+]

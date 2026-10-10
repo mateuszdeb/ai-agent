@@ -1,4 +1,4 @@
-# My Agent Project
+# Household Expense Checker Agent
 
 Student project for **Designing LLM/VLM Agents**.
 
@@ -15,8 +15,11 @@ cp .env.example .env
 uv run pytest
 ```
 
-Add the individual OpenRouter key supplied by the instructor to `.env`. Never
-commit this file or place the key in code, traces, issues, or reports.
+Configure your local model endpoint in `.env`. This project runs 100% locally on Apple Silicon (M1 Pro 16GB) without external keys or cloud dependencies. Start your local model server (e.g., Ollama running `Gemma 4 12B Q4_0` at `http://localhost:11434/v1`), configure `.env`, and verify the local connection:
+
+```bash
+uv run python -c 'from agent_project.llm import OpenRouterClient; print(OpenRouterClient().complete([{"role": "user", "content": "Reply with exactly COURSE_READY"}])["text"])'
+```
 
 ## Coding Agent
 
@@ -26,18 +29,27 @@ Meeting 1.
 
 ## Project Brief
 
-- **Project title:**
-- **Intended user:**
-- **Problem and primary task:**
-- **Why an agent is appropriate:**
-- **Planned data:**
+- **Project title:** Household Expense Checker Agent
+- **Intended user:** Individuals and households managing everyday personal budgets and shared domestic expenses (e.g., groceries, utility bills, subscriptions, dining, and family shopping).
+- **Problem and primary task:** Maintaining a personal or household budget is tedious and frequently abandoned because bank statements often feature vague merchant names, mixed purchases (e.g., a supermarket trip combining groceries, home supplies, and electronics), and unexpected cost spikes (e.g., sudden utility rate increases or forgotten subscription renewals). The primary task is to inspect personal/household bank transactions, detect unusual or ambiguous expenses, proactively request brief clarification from the user before finalizing category assignments, and maintain an accurate household budget breakdown.
+- **User requests (what they ask for):** "Review my latest household bank transactions, identify any unusual expenses or duplicates, ask me for clarification on ambiguous charges, and assign proper budget categories."
+- **What a good result looks like:** Routine expenses (groceries, regular utilities, known subscriptions) are categorized accurately and silently; anomalous items (unusual spikes, unknown vendors, double billings) are explicitly flagged with concise clarification prompts; and all decisions are logged in a structured JSONL trace with latency and token usage.
+- **Why an agent is appropriate:** Rigid budgeting rules or basic keyword matchers cannot disambiguate multi-category stores or detect contextual anomalies across a family's typical spending patterns. An LLM/VLM agent can reason about household spending habits, inspect smartphone photos of paper receipts to verify itemized purchases, ask contextual and low-friction clarification questions, and incorporate user feedback to refine categorization.
+- **Planned data:** Anonymized household bank transaction logs (CSV/JSON containing timestamps, amounts, merchant descriptions, payment methods, and historical budget categories) and sample paper receipt photos (grocery slips, utility bills, restaurant receipts).
 - **Planned tools:**
-- **Planned visual input:**
+  - `get_household_transactions`: Fetch and filter recent personal/household bank transactions.
+  - `compute_budget_baseline`: Calculate typical household spending ranges and anomaly thresholds by category and merchant (e.g., typical grocery basket size, normal utility bill ranges).
+  - `request_user_clarification`: Prompt the household member with a concise question and suggested category choices for anomalous or ambiguous expenses.
+  - `assign_category`: Record the confirmed budget category (e.g., Groceries, Utilities, Entertainment, Healthcare, Home Improvement) with a rationale and confidence rating.
+- **Planned visual input:** Smartphone photos of supermarket receipts, restaurant slips, and utility bill statements to inspect itemized line items when transaction descriptions are vague or amounts deviate from typical household baselines.
 - **Success criteria:**
+  - Accurately identifies household spending anomalies (e.g., unusual price spikes, forgotten subscription renewals, duplicate charges).
+  - Automatically categorizes at least 90% of routine household transactions without requiring user input.
+  - Keeps clarification requests targeted, concise, and easy for the user to answer.
+  - Operates reliably on local hardware (MacBook Pro M1 Pro 16GB) using quantized Gemma models (specifically `Gemma 4 12B Q4_0`) within reasonable execution bounds (<= 12 model steps per run).
 - **Non-goals and safety boundaries:**
-
-Replace the empty fields above with your project definition and keep them
-current as the project develops.
+  - Non-goals: Direct bank account manipulation, automated bill payments, investment/tax advice, or debt management.
+  - Safety boundaries: Zero handling or storage of real banking credentials, payment card numbers, or unredacted personal identifiers (PII). Operates only on sanitized personal finance data and avoids guessing ambiguous household expenses without user clarification.
 
 ## Starter Code
 
@@ -58,25 +70,29 @@ The repository contains only:
 The agent loop, domain tools, state, retrieval, multimodal behavior, evaluation,
 and safety controls are intentionally left for you to design and implement.
 
-## Course Limits
+## Model Execution & Hardware Target (MacBook Pro M1 Pro 16GB)
 
-- One model for all live work: `google/gemma-4-26b-a4b-it`.
-- USD 2 per key for the whole course, enforced by OpenRouter.
-- In your own code: at most 12 model steps and USD 0.10 per agent run.
+- **Local Model Target:** `Gemma 4 12B Q4_0` (4-bit quantized, e.g., via Ollama, llama.cpp, or MLX).
+  - **Hardware compatibility:** On Apple Silicon M1 Pro with 16 GB unified memory, the 12B model at Q4_0 quantization requires ~6.8–7.5 GB of RAM (including KV cache for typical context lengths). This fits comfortably within the 16 GB envelope, leaving ~8–9 GB for macOS, system services, and local visual/multimodal preprocessing without risking disk swap.
+  - **Why Gemma 4 12B Q4_0:** It represents the sweet spot for a 16GB M1 Pro machine: superior reasoning, instruction following, and tool-calling accuracy compared to smaller variants, while avoiding the memory pressure and swapping issues of larger 26B+ models.
+  - **Multimodal Vision:** Built-in vision capabilities or paired document tools (e.g., `PaliGemma 2` / OCR preprocessing) for inspecting paper receipts, utility bills, and payment screenshots.
+- **Run Constraints & Privacy:**
+  - **100% Local & Free:** Zero cloud costs, zero external token limits, and complete data privacy for sensitive personal and household financial records.
+  - **Step Limit:** Maximum 12 model steps per agent run to ensure responsiveness and tight decision loops.
 
-## Working with the Course Model
+## Working with Gemma Locally
 
-- The model usually requests one tool call per turn. Tell it in the system
+- The model usually requests one tool call per turn. Inform it in the system
   prompt that independent calls may be requested together.
-- For typed output, such as a plan or facts read from an image, offer one tool
-  whose parameters are your Pydantic schema and validate its arguments. Keep
-  `tool_choice` at its default, `"auto"`, and give lists a maximum length;
-  free-form JSON output sometimes repeats itself until the token limit.
-- Results vary between identical runs. Run your fixed evaluation set at least
-  three times and report the worst run as well as the average.
-- A typical agent run costs well under USD 0.01. Use the mock client in tests.
-- Copy the traces you submit to `evidence/`. Check them first for keys,
-  personal data, and absolute file paths.
+- For typed output, such as category assignments or parsed receipt data, offer
+  one tool whose parameters match your Pydantic schema and validate its arguments.
+  Keep `tool_choice` at its default (`"auto"`), and provide list maximum lengths;
+  free-form JSON output can repeat itself until token exhaustion.
+- Results vary between runs. Run your evaluation set at least three times locally
+  and report both the average and worst-case performance.
+- Use `MockClient` in automated unit tests (`pytest`) to ensure fast, deterministic CI.
+- Copy traces submitted for coursework to `evidence/`. Check them first for keys,
+  personal data, and absolute local paths.
 
 ## Commands
 
