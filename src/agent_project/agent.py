@@ -10,24 +10,36 @@ from typing import Any
 from agent_project.llm import LocalClient, ModelClient
 from agent_project.tools import (
     TOOL_DEFINITIONS,
+    compute_budget_baseline,
+    find_duplicate_candidates,
     get_transaction_details,
     get_transactions,
 )
 from agent_project.tracing import append_trace
 
 SYSTEM_PROMPT = """You are a Household Expense Checker Agent.
-Your job is to inspect personal and household transactions, detect unusual
-expenses, price spikes, or potential duplicates, and highlight items requiring
-user clarification.
+Your job is to inspect personal and household bank transactions, detect unusual
+expenses, and produce a structured report with clarification questions.
+
+IMPORTANT — follow this multi-step investigation process:
+1. Call `find_duplicate_candidates` to scan for potential double-charges.
+2. Call `get_transactions` (limit 20) to get the full list of recent transactions.
+3. For each transaction that looks suspicious (unusually high amount, unknown
+   merchant, or unclear description), call `get_transaction_details` to inspect it.
+4. For any suspicious merchant or category, call `compute_budget_baseline` to
+   compare the transaction amount against historical averages.
+5. Only after completing steps 1-4, produce your final report.
+
+The data contains NO pre-labeled anomalies — you must reason from raw amounts,
+dates, merchant names, and descriptions.
 
 Guidelines:
-- Use the available read-only tools: `get_transactions` and `get_transaction_details`.
-- When independent tool calls are helpful, you may request them together.
-- Analyze transaction amounts, merchants, and notes.
+- Independent tool calls may be requested together when they do not depend on
+  each other's results.
 - In your final response, provide a structured summary:
-  1. Routine categorized expenses (normal spending).
-  2. Flagged unusual/anomalous expenses (with clear reasons and clarification
-     questions for the household user).
+  1. Routine categorized expenses (normal spending, why you consider them normal).
+  2. Flagged unusual/anomalous expenses: reason for flagging, comparison to
+     baseline if available, and a concise clarification question for the user.
 """
 
 
@@ -81,6 +93,12 @@ def run_expense_agent(
         "get_transaction_details": lambda **kwargs: get_transaction_details(
             data_path=data_path, **kwargs
         ),
+        "compute_budget_baseline": lambda **kwargs: compute_budget_baseline(
+            data_path=data_path, **kwargs
+        ),
+        "find_duplicate_candidates": lambda **kwargs: find_duplicate_candidates(
+            data_path=data_path, **kwargs
+        ),
     }
 
     final_answer: str | None = None
@@ -90,6 +108,11 @@ def run_expense_agent(
         text = response.get("text")
         tool_calls = response.get("tool_calls") or []
 
+        # Ensure cost is always present in usage (0.0 for local/free models)
+        usage = response.get("usage") or {}
+        if "cost" not in usage:
+            usage["cost"] = 0.0
+
         append_trace(
             trace_path,
             "model_response",
@@ -98,7 +121,7 @@ def run_expense_agent(
                 "text": text,
                 "tool_calls": tool_calls,
                 "latency_ms": response.get("latency_ms"),
-                "usage": response.get("usage", {}),
+                "usage": usage,
                 "finish_reason": response.get("finish_reason"),
             },
         )
@@ -204,8 +227,9 @@ if __name__ == "__main__":
 
     print("Running Household Expense Checker Agent...")
     default_goal = (
-        "Przejrzyj ostatnie transakcje domowe, wskaż transakcje normalne "
-        "oraz te podejrzane/wymagające doprecyzowania."
+        "Przejrzyj ostatnie transakcje domowe, wykryj anomalie i duplikaty "
+        "samodzielnie analizując kwoty i merchantów, a następnie wskaż "
+        "transakcje normalne oraz te podejrzane/wymagające doprecyzowania."
     )
     user_goal = " ".join(sys.argv[1:]).strip() if len(sys.argv) > 1 else default_goal
 

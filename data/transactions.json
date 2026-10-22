@@ -6,8 +6,7 @@
     "amount": 142.50,
     "currency": "PLN",
     "description": "Zakupy spożywcze - Płatność kartą",
-    "status": "normal",
-    "suggested_category": "Groceries"
+    "category_hint": "Groceries"
   },
   {
     "id": "tx_102",
@@ -16,8 +15,7 @@
     "amount": 284.10,
     "currency": "PLN",
     "description": "Faktura za energię elektryczną 09/2026",
-    "status": "normal",
-    "suggested_category": "Utilities"
+    "category_hint": "Utilities"
   },
   {
     "id": "tx_103",
@@ -26,8 +24,7 @@
     "amount": 24.99,
     "currency": "PLN",
     "description": "Subskrypcja Spotify Premium",
-    "status": "normal",
-    "suggested_category": "Subscriptions"
+    "category_hint": "Subscriptions"
   },
   {
     "id": "tx_104",
@@ -36,9 +33,7 @@
     "amount": 24.99,
     "currency": "PLN",
     "description": "Subskrypcja Spotify Premium",
-    "status": "flagged_duplicate",
-    "notes": "Potencjalne podwójne obciążenie subskrypcji w ciągu 24h",
-    "suggested_category": "Subscriptions"
+    "category_hint": "Subscriptions"
   },
   {
     "id": "tx_105",
@@ -47,9 +42,7 @@
     "amount": 1850.00,
     "currency": "PLN",
     "description": "Płatność kartą terminal Carrefour",
-    "status": "flagged_high_amount",
-    "notes": "Nietypowo wysoka kwota w markecie - możliwy zakup sprzętu RTV/AGD lub wyposażenia domu",
-    "suggested_category": "Unknown - Needs Clarification"
+    "category_hint": null
   },
   {
     "id": "tx_106",
@@ -58,9 +51,7 @@
     "amount": 349.00,
     "currency": "PLN",
     "description": "Płatność internetowa PayPal",
-    "status": "flagged_unrecognized",
-    "notes": "Nierozpoznany odbiorca i niejasny opis transakcji",
-    "suggested_category": "Unknown - Needs Clarification"
+    "category_hint": null
   },
   {
     "id": "tx_107",
@@ -69,8 +60,7 @@
     "amount": 68.40,
     "currency": "PLN",
     "description": "Zakup leków bez recepty",
-    "status": "normal",
-    "suggested_category": "Healthcare"
+    "category_hint": "Healthcare"
   },
   {
     "id": "tx_108",
@@ -79,7 +69,42 @@
     "amount": 215.00,
     "currency": "PLN",
     "description": "Tankowanie paliwa Pb95",
-    "status": "normal",
-    "suggested_category": "Transport"
+    "category_hint": "Transport"
+  },
+  {
+    "id": "tx_109",
+    "date": "2026-10-08",
+    "merchant": "Biedronka",
+    "amount": 98.30,
+    "currency": "PLN",
+    "description": "Zakupy spożywcze - Płatność kartą",
+    "category_hint": "Groceries"
+  },
+  {
+    "id": "tx_110",
+    "date": "2026-10-10",
+    "merchant": "PGE Dystrybucja",
+    "amount": 541.20,
+    "currency": "PLN",
+    "description": "Faktura za energię elektryczną 10/2026",
+    "category_hint": "Utilities"
+  },
+  {
+    "id": "tx_111",
+    "date": "2026-10-11",
+    "merchant": "Biedronka",
+    "amount": 127.80,
+    "currency": "PLN",
+    "description": "Zakupy spożywcze - Płatność kartą",
+    "category_hint": "Groceries"
+  },
+  {
+    "id": "tx_112",
+    "date": "2026-10-12",
+    "merchant": "Orlen Stacja Paliw",
+    "amount": 218.50,
+    "currency": "PLN",
+    "description": "Tankowanie paliwa Pb95",
+    "category_hint": "Transport"
   }
 ]

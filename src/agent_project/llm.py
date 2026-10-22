@@ -8,6 +8,7 @@ from collections import deque
 from pathlib import Path
 from typing import Any, Protocol
 
+import httpx
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -70,8 +71,8 @@ class OpenRouterClient:
         self.client = OpenAI(
             api_key=resolved_api_key,
             base_url=resolved_base_url,
-            timeout=60.0,
-            max_retries=1,
+            timeout=httpx.Timeout(connect=10.0, read=300.0, write=10.0, pool=5.0),
+            max_retries=0,
         )
 
     def complete(
