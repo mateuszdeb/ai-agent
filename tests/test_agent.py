@@ -99,10 +99,17 @@ def test_agent_multi_step_investigation(tmp_path) -> None:
     assert events.count("model_response") == 4
     assert events.count("tool_result") == 4  # dupes + txs + detail + baseline
 
-    # Verify cost is always logged
+    # Verify provider, model, latency, and cost are always logged
+    start_event = next(e for e in lines if e["event"] == "agent_start")
+    assert "provider" in start_event["payload"]
+    assert "model" in start_event["payload"]
+
     model_responses = [e for e in lines if e["event"] == "model_response"]
     for resp in model_responses:
         assert "cost" in resp["payload"]["usage"], "cost must be present in every step"
+        assert "provider" in resp["payload"], "provider must be present in every step"
+        assert "model" in resp["payload"], "model must be present in every step"
+        assert resp["payload"]["latency_ms"] is not None
 
 
 def test_agent_cost_always_logged(tmp_path) -> None:

@@ -41,6 +41,14 @@ Meeting 1.
   - `compute_budget_baseline`: Calculate typical household spending ranges and anomaly thresholds by category and merchant (e.g., typical grocery basket size, normal utility bill ranges).
   - `request_user_clarification`: Prompt the household member with a concise question and suggested category choices for anomalous or ambiguous expenses.
   - `assign_category`: Record the confirmed budget category (e.g., Groceries, Utilities, Entertainment, Healthcare, Home Improvement) with a rationale and confidence rating.
+- **Implemented tools:**
+  - `get_transactions(limit=10, merchant=None)`: Read-only search fetching recent transactions with optional merchant filtering.
+  - `get_transaction_details(transaction_id)`: Read-only retrieval of full transaction records and notes.
+  - `compute_budget_baseline(merchant=None, category_hint=None)`: Read-only calculation of historical spending averages, min/max bounds, and counts to detect price spikes.
+  - `find_duplicate_candidates()`: Read-only detection of repeated charges (same merchant and amount within a 3-day window).
+  - `evidence/trace_successful.jsonl` (`trace_20261022_multistep.jsonl`): Demonstrates a successful multi-step investigation loop (duplicate scan -> detail inspection -> baseline comparison -> structured report).
+  - `evidence/trace_unsuccessful.jsonl`: Demonstrates an unsuccessful execution bounded by the step limit (`step_limit_reached`).
+  Each trace records the model name, provider, token usage, cost, and latency per step.
 - **Planned visual input:** Smartphone photos of supermarket receipts, restaurant slips, and utility bill statements to inspect itemized line items when transaction descriptions are vague or amounts deviate from typical household baselines.
 - **Success criteria:**
   - Accurately identifies household spending anomalies (e.g., unusual price spikes, forgotten subscription renewals, duplicate charges).

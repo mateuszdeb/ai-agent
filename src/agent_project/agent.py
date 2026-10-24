@@ -78,6 +78,7 @@ def run_expense_agent(
             "goal": goal,
             "max_steps": max_steps,
             "model": getattr(model_client, "model", "mock"),
+            "provider": getattr(model_client, "provider", "local"),
         },
     )
 
@@ -118,6 +119,10 @@ def run_expense_agent(
             "model_response",
             {
                 "step": step,
+                "model": response.get("model")
+                or getattr(model_client, "model", "mock"),
+                "provider": response.get("provider")
+                or getattr(model_client, "provider", "local"),
                 "text": text,
                 "tool_calls": tool_calls,
                 "latency_ms": response.get("latency_ms"),

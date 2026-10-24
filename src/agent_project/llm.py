@@ -68,6 +68,7 @@ class OpenRouterClient:
             raise ValueError(
                 "Set OPENROUTER_API_KEY (or LLM_BASE_URL) and MODEL_NAME in .env"
             )
+        self.provider = "local" if is_local else "openrouter"
         self.client = OpenAI(
             api_key=resolved_api_key,
             base_url=resolved_base_url,
@@ -121,7 +122,7 @@ class OpenRouterClient:
             ],
             "finish_reason": response.choices[0].finish_reason,
             "model": response.model,
-            "provider": getattr(response, "provider", None),
+            "provider": getattr(response, "provider", None) or self.provider,
             "retried_after": retried_after,
             "latency_ms": round((time.perf_counter() - started) * 1000),
             "usage": usage,
@@ -131,6 +132,8 @@ class OpenRouterClient:
 class MockClient:
     def __init__(self, responses: list[dict[str, Any]]) -> None:
         self.responses = deque(responses)
+        self.model = "mock"
+        self.provider = "mock"
 
     def complete(
         self,
