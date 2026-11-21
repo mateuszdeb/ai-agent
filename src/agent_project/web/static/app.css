@@ -1,0 +1,175 @@
+/* Household Expense Checker — same-origin static styles only. */
+
+:root {
+  color-scheme: light;
+  --ink: #1c2430;
+  --accent: #1a4d8f;
+  --focus: #b23a1d;
+  --line: #c9d2de;
+  --panel: #f4f7fb;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 60rem;
+  padding: 0 1rem 3rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+header,
+section {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+h1 {
+  margin: 0.25rem 0;
+  font-size: 1.35rem;
+}
+
+h2 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+#service-state {
+  font-weight: 600;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0 0.15rem;
+  font-weight: 600;
+}
+
+textarea,
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  font: inherit;
+}
+
+button {
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--accent);
+  background: #ffffff;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:disabled {
+  color: #6b7686;
+  border-color: var(--line);
+  cursor: not-allowed;
+}
+
+#command-error,
+#decision-note,
+#run-note {
+  margin: 0.5rem 0 0;
+  font-weight: 700;
+}
+
+#error-text-id {
+  font-weight: 400;
+}
+
+dl#run-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem 0.75rem;
+  margin: 0;
+}
+
+dl#run-facts dt {
+  font-weight: 600;
+}
+
+dl#run-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+#observations-list {
+  padding-left: 1.2rem;
+}
+
+#observations-list li {
+  margin: 0.3rem 0;
+  overflow-wrap: anywhere;
+}
+
+#model-answer {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 44rem;
+}
+
+caption {
+  text-align: left;
+  font-style: italic;
+  padding: 0.25rem 0;
+}
+
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+td details {
+  min-width: 14rem;
+}
+
+td summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Status is always carried by text; colors only reinforce it. */
+.status-running,
+.status-awaiting_approval {
+  font-weight: 700;
+}
+
+/* Visible keyboard focus everywhere, including inside controls. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Narrow viewport: single column and horizontally scrollable table. */
+@media (max-width: 480px) {
+  header,
+  section {
+    padding: 0.6rem;
+  }
+
+  dl#run-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .table-scroll table {
+    min-width: 46rem;
+  }
+}

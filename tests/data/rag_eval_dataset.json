@@ -1,0 +1,147 @@
+[
+  {
+    "id": "eval_01_simple_groceries_limit",
+    "query": "Jaki jest miesięczny limit wydatków na zakupy spożywcze i chemię w kategorii Groceries?",
+    "category": "simple",
+    "expected_behavior": "answer",
+    "expected_evidence_status": "complete",
+    "relevant_sources": [
+      "household_budget_policy.md"
+    ],
+    "expected_facts": [
+      "2500 PLN",
+      "próg ostrzegawczy 2000 PLN"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Proste pytanie o limit miesięczny kategorii Groceries (2 500,00 PLN) z tabeli w household_budget_policy.md."
+  },
+  {
+    "id": "eval_02_simple_pge_payment_deadline",
+    "query": "Ile dni wynosi termin płatności faktury za energię elektryczną w PGE Dystrybucja?",
+    "category": "simple",
+    "expected_behavior": "answer",
+    "expected_evidence_status": "complete",
+    "relevant_sources": [
+      "utility_contracts_faq.md"
+    ],
+    "expected_facts": [
+      "14 dni",
+      "14 dni od daty wystawienia"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Jednoznaczne pytanie o termin płatności faktury za prąd w utility_contracts_faq.md (14 dni)."
+  },
+  {
+    "id": "eval_03_simple_spotify_rate",
+    "query": "Jaka jest dozwolona miesięczna stawka za indywidualny plan subskrypcji Spotify Polska?",
+    "category": "simple",
+    "expected_behavior": "answer",
+    "expected_evidence_status": "complete",
+    "relevant_sources": [
+      "subscriptions_policy.md"
+    ],
+    "expected_facts": [
+      "24,99 PLN",
+      "plan indywidualny"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Pytanie o stawkę planu indywidualnego Spotify z subscriptions_policy.md (24,99 PLN)."
+  },
+  {
+    "id": "eval_04_simple_electronics_warranty",
+    "query": "Przez jaki okres należy przechowywać dowody zakupu sprzętu elektronicznego, AGD i RTV?",
+    "category": "simple",
+    "expected_behavior": "answer",
+    "expected_evidence_status": "complete",
+    "relevant_sources": [
+      "warranties_and_receipts.md"
+    ],
+    "expected_facts": [
+      "24 miesiące",
+      "2 lata",
+      "rękojmia konsumencka"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Pytanie o okres archiwizacji dowodów zakupu AGD/RTV w warranties_and_receipts.md (24 miesiące / 2 lata)."
+  },
+  {
+    "id": "eval_05_rewrite_spotify_duplicate",
+    "query": "Co zrobić gdy Spotify pobrało opłatę dwa razy w odstępie doby?",
+    "category": "bounded_search",
+    "expected_behavior": "rewrite_and_answer",
+    "expected_evidence_status": "need_better_query",
+    "relevant_sources": [
+      "subscriptions_policy.md"
+    ],
+    "expected_facts": [
+      "duplikat",
+      "reklamacja",
+      "48 godzin",
+      "błąd rozliczeniowy"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Pytanie wymagające powtórnego szukania/bounded search pod kątem procedury postępowania ze zduplikowaną opłatą (48h, duplicate, chargeback)."
+  },
+  {
+    "id": "eval_06_rewrite_pge_high_bill",
+    "query": "Przyszła bardzo wysoka prognoza za prąd przekraczająca 400 zł, jakie są wytyczne?",
+    "category": "bounded_search",
+    "expected_behavior": "rewrite_and_answer",
+    "expected_evidence_status": "need_better_query",
+    "relevant_sources": [
+      "utility_contracts_faq.md"
+    ],
+    "expected_facts": [
+      "400,00 PLN",
+      "odczytanie licznika",
+      "reklamacja",
+      "anomalia zużycia"
+    ],
+    "missing_evidence_topic": null,
+    "description": "Pytanie wymagające doprecyzowania/bounded search dotyczące procedury alarmowej przy fakturze za prąd powyżej 400 PLN."
+  },
+  {
+    "id": "eval_07_ambiguous_faktura",
+    "query": "faktura",
+    "category": "ambiguous",
+    "expected_behavior": "clarify",
+    "expected_evidence_status": "ambiguous",
+    "relevant_sources": [],
+    "expected_facts": [],
+    "missing_evidence_topic": null,
+    "description": "Jednowyrazowe zapytanie o niejednoznacznej intencji; oczekiwane przejście do węzła clarify i pytanie o doprecyzowanie."
+  },
+  {
+    "id": "eval_08_unanswerable_cryptocurrency",
+    "query": "Jakie są miesięczne limity kwotowe na zakup kryptowalut Bitcoin i Ethereum w budżecie?",
+    "category": "unanswerable",
+    "expected_behavior": "abstain",
+    "expected_evidence_status": "lacks_evidence",
+    "relevant_sources": [],
+    "expected_facts": [],
+    "missing_evidence_topic": "kryptowaluty / Bitcoin / Ethereum",
+    "description": "Pytanie o nieistniejącą kategorię i procedurę w budżecie domowym; model musi odmówić odpowiedzi (abstain) i wskazać brak dokumentów."
+  },
+  {
+    "id": "eval_09_unanswerable_tauron_provider",
+    "query": "Jaka jest stawka za 1 kWh w taryfie nocnej u dostawcy Tauron Polska Energia?",
+    "category": "unanswerable",
+    "expected_behavior": "abstain",
+    "expected_evidence_status": "lacks_evidence",
+    "relevant_sources": [],
+    "expected_facts": [],
+    "missing_evidence_topic": "dostawca Tauron / taryfa nocna",
+    "description": "Pytanie o dostawcę energii Tauron nieopisanego w dokumentach (kolekcja zawiera wyłącznie umowę z PGE Dystrybucja); model musi odmówić odpowiedzi."
+  },
+  {
+    "id": "eval_10_unanswerable_pets_limit",
+    "query": "Jaki jest miesięczny limit wydatków na karmę i leczenie weterynaryjne dla psa lub kota?",
+    "category": "unanswerable",
+    "expected_behavior": "abstain",
+    "expected_evidence_status": "lacks_evidence",
+    "relevant_sources": [],
+    "expected_facts": [],
+    "missing_evidence_topic": "zwierzęta domowe / weterynarz / karma dla zwierząt",
+    "description": "Pytanie o limit kwotowy, którego celowo nie zdefiniowano w tabeli household_budget_policy.md; model musi odmówić odpowiedzi."
+  }
+]

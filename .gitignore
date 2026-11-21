@@ -1,4 +1,6 @@
 .env
+.env.*
+!.env.example
 .venv/
 __pycache__/
 *.py[cod]
@@ -12,3 +14,13 @@ build/
 traces/*
 !traces/.gitkeep
 .cache/
+.DS_Store
+
+# Local application state
+/data/transaction_changes.jsonl
+data/*.jsonl.lock
+data/*.jsonl.web.lock
+data/vector_index.json
+
+# Local UI acceptance captures
+/evidence/ui_acceptance_*.png

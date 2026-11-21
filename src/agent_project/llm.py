@@ -26,9 +26,11 @@ class ModelClient(Protocol):
 
 
 def image_part(path: str | Path) -> dict[str, Any]:
-    """Content part for a local image, used next to a text part in one message."""
+    """Build a content part for a local image with a recognized file extension."""
     path = Path(path)
-    mime = mimetypes.guess_type(path.name)[0] or "image/png"
+    mime, _ = mimetypes.guess_type(path.name)
+    if mime is None or not mime.startswith("image/"):
+        raise ValueError("Expected a recognized image file extension")
     data = base64.b64encode(path.read_bytes()).decode()
     return {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{data}"}}
 

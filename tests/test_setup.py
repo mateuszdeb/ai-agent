@@ -1,6 +1,8 @@
 import json
 from types import SimpleNamespace
 
+import pytest
+
 from agent_project import MockClient, append_trace
 from agent_project.llm import OpenRouterClient, image_part, is_broken_reply
 
@@ -68,8 +70,18 @@ def test_broken_reply_is_retried_on_another_provider(monkeypatch) -> None:
 
 
 def test_image_part(tmp_path) -> None:
-    image = tmp_path / "brief.png"
-    image.write_bytes(b"\x89PNG\r\n\x1a\n")
+    image = tmp_path / "receipt.jpg"
+    image.write_bytes(b"\xff\xd8\xff\xd9")
     part = image_part(image)
-    assert part["type"] == "image_url"
-    assert part["image_url"]["url"].startswith("data:image/png;base64,iVBORw0KGgo")
+    assert part == {
+        "type": "image_url",
+        "image_url": {"url": "data:image/jpeg;base64,/9j/2Q=="},
+    }
+
+
+@pytest.mark.parametrize("filename", ["receipt", "receipt.txt"])
+def test_image_part_requires_image_extension(tmp_path, filename) -> None:
+    path = tmp_path / filename
+    path.write_bytes(b"sample")
+    with pytest.raises(ValueError, match="recognized image file extension"):
+        image_part(path)

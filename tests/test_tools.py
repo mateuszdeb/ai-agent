@@ -15,14 +15,19 @@ from agent_project.tools import (
 
 
 def test_tool_definitions_count() -> None:
-    assert len(TOOL_DEFINITIONS) == 4
+    assert len(TOOL_DEFINITIONS) == 8
     names = {tool["function"]["name"] for tool in TOOL_DEFINITIONS}
-    assert names == {
+    expected = {
+        "search_transactions",
         "get_transactions",
         "get_transaction_details",
         "compute_budget_baseline",
         "find_duplicate_candidates",
+        "assign_category",
+        "undo_category_assignment",
+        "delete_flagged_transaction",
     }
+    assert names == expected
 
 
 def test_get_transactions_returns_data() -> None:
